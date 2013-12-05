@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 
 import org.junit.Test;
 
-public class testTask {
+public class TestTask {
 
     private static final String NAME = "fbgai178dasde";
     private static final String TIME = "dhsjauf89uhbf";
