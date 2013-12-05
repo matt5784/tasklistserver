@@ -3,11 +3,11 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
+    <!--<parent>
     <artifactId>taskparent</artifactId>
     <groupId>edu.vu.task</groupId>
     <version>1</version>
-  </parent>
+  </parent>-->
     <packaging>war</packaging>
     <version>1</version>
 
