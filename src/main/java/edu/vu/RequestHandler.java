@@ -79,13 +79,13 @@ public class RequestHandler {
         return temp;
     }
 
-    @ApiMethod(name = "assigntask")
+    /*@ApiMethod(name = "assigntask")
     public Task assignTask(@Named("user") final User user, @Named("id") final int id) {
         if (user != null) {
             return new Task(""+id, ""+id, id, id);
         } else {
             return null;
         }
-    }
+    }*/
 
 }
