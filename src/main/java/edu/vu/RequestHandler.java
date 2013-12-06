@@ -1,9 +1,11 @@
 package edu.vu;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
@@ -31,6 +33,9 @@ public class RequestHandler {
     private static final String NAME = "tasklist";
     private final Key taskListKey;
     private final DatastoreService datastore;
+    private final Map<Integer, Task> mAllTasks = new HashMap<Integer, Task>();
+    private final Map<User, List<Task>> mAssignedTasks = new HashMap<User, List<Task>>();
+
 
     public RequestHandler() {
         taskListKey = KeyFactory.createKey("Tasklist", NAME);
@@ -55,6 +60,7 @@ public class RequestHandler {
 
 
         datastore.put(task);
+        mAllTasks.put(new Random().nextInt(), temp);
 
         return temp;
     }
@@ -65,7 +71,10 @@ public class RequestHandler {
         final Map<Integer, Task> temp = new HashMap<Integer, Task>();
 
         final Query query = new Query("Task", taskListKey).addSort("date", Query.SortDirection.DESCENDING);
-        final List<Entity> tasks = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(5));
+
+        //Note that this 100 is a hard limit on the number of tasks able to be stored
+        final List<Entity> tasks = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(100));
+
         if (tasks.isEmpty()) {
 
         } else {
@@ -79,13 +88,18 @@ public class RequestHandler {
         return temp;
     }
 
-    /*@ApiMethod(name = "assigntask")
-    public Task assignTask(@Named("user") final User user, @Named("id") final int id) {
-        if (user != null) {
-            return new Task(""+id, ""+id, id, id);
+    @ApiMethod(name = "assigntask")
+    public boolean assignTask(@Named("user") final User user, @Named("id") final int id) {
+        if (user != null && mAllTasks.containsKey(id)) {
+            if (mAssignedTasks.get(user) == null) {
+                final List<Task> temp = new ArrayList<Task>();
+                mAssignedTasks.put(user, temp);
+            }
+            mAssignedTasks.get(user).add(mAllTasks.get(id));
+            return true;
         } else {
-            return null;
+            return false;
         }
-    }*/
+    }
 
 }
